@@ -1,0 +1,46 @@
+service: blog-backend
+
+provider:
+  name: aws
+  runtime: nodejs16.x
+  region: ap-northeast-1
+  iamRoleStatements:
+    - Effect: Allow
+      Action:
+        - dynamodb:GetItem
+        - dynamodb:PutItem
+        - dynamodb:UpdateItem
+        - dynamodb:DeleteItem
+        - dynamodb:Scan
+        - dynamodb:Query
+      Resource: "arn:aws:dynamodb:us-east-1:*:table/BlogPosts"
+
+functions:
+  createPost:
+    handler: handler.createPost
+    events:
+      - http:
+        path: posts
+        method: post
+        cors: true
+  getPost:
+    handler: handler.getPost
+    events:
+      - http:
+        path: posts/{id}
+        method: get
+        cors: true
+  updatePost:
+    handler: handler.updatePost
+    events:
+      - http:
+        path: posts/{id}
+        method: put
+        cors: true  
+  deletePost:
+    handler: handler.deletePost
+    events:
+      - http:
+        path: posts/{id}
+        method: delete
+        cors: true          
