@@ -1,9 +1,13 @@
 service: blog-backend
 
+useDotenv: true
+
 provider:
   name: aws
   runtime: nodejs16.x
   region: ap-northeast-1
+  environment:
+    SECRET_KEY: ${env:SECRET_KEY}
   iamRoleStatements:
     - Effect: Allow
       Action:
@@ -16,31 +20,38 @@ provider:
       Resource: "arn:aws:dynamodb:us-east-1:*:table/BlogPosts"
 
 functions:
-  createPost:
-    handler: handler.createPost
+  listPostsWithAuth:
+    handler: handler.listPostsWithAuth
     events:
       - http:
-        path: posts
-        method: post
-        cors: true
-  getPost:
-    handler: handler.getPost
+          path: posts
+          method: get
+          cors: true
+  createPostWithAuth:
+    handler: handler.createPostWithAuth
     events:
       - http:
-        path: posts/{id}
-        method: get
-        cors: true
-  updatePost:
-    handler: handler.updatePost
+          path: posts
+          method: post
+          cors: true
+  getPostWithAuth:
+    handler: handler.getPostWithAuth
     events:
       - http:
-        path: posts/{id}
-        method: put
-        cors: true  
-  deletePost:
-    handler: handler.deletePost
+          path: posts/{id}
+          method: get
+          cors: true
+  updatePostWithAuth:
+    handler: handler.updatePostWithAuth
     events:
       - http:
-        path: posts/{id}
-        method: delete
-        cors: true          
+          path: posts/{id}
+          method: put
+          cors: true
+  deleteWithAuth:
+    handler: handler.deleteWithAuth
+    events:
+      - http:
+          path: posts/{id}
+          method: delete
+          cors: true
